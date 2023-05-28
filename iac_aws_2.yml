@@ -1,0 +1,85 @@
+#
+# Terraform Run
+#
+- hosts: localhost
+  tasks:
+
+    - name: Terraform Run
+      community.general.terraform:
+      #cloud.terraform.terraform:
+        project_path: 'terraform/'
+        state: present
+        force_init: yes
+        init_reconfigure: yes
+        backend_config:
+          region: "ap-northeast-1"
+          bucket: "keyamamo-demo"
+          key: "{{ my_tf_key }}"
+        variables: 
+           TF_VAR_tag: "{{ my_tf_key }}"
+  
+    - name: Inventory Update
+      ansible.builtin.meta: refresh_inventory
+
+#
+# EC2 Config
+#
+- hosts: tag_myGroup_{{ my_tf_key }}
+  remote_user: ec2-user
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - name: Wait for SSH connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gather fact
+      ansible.builtin.setup:
+
+    - name: httpd Install
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: httpd Launch
+      ansible.builtin.systemd:
+        name: httpd.service
+        enabled: yes
+        state: started
+
+    - name: Temp password Create
+      set_fact:
+        random_password: "{{ lookup('community.general.random_string', length=12, charset='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@') }}"
+
+    - name: Temp password Debug
+      debug:
+        var: random_password
+
+    - name: Temp password Set
+      user:
+        name: "ec2-user"
+        password: "{{ random_password | password_hash('sha512') }}"
+        update_password: always
+
+    - name: SSHD Config
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+        backrefs: yes
+      with_items:
+        - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication yes' }
+        - { regexp: '^#?ClientAliveInterval', line: 'ClientAliveInterval 120' }
+        - { regexp: '^#?ClientAliveCountMax', line: 'ClientAliveInterval 3' }
+
+    - name: SSHD Restart
+      service:
+        name: sshd
+        state: restarted
+
+    - name: Temp password Set expiration
+      shell: chage -d 0 ec2-user
+
+
+          

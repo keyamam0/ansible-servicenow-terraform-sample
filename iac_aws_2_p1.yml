@@ -1,0 +1,22 @@
+#
+# Terraform Run
+#
+- hosts: localhost
+  tasks:
+
+    - name: Terraform Run
+      community.general.terraform:
+      #cloud.terraform.terraform:
+        project_path: 'terraform/'
+        state: present
+        force_init: yes
+        init_reconfigure: yes
+        backend_config:
+          region: "ap-northeast-1"
+          bucket: "keyamamo-demo"
+          key: "{{ my_tf_key }}"
+        variables: 
+           TF_VAR_tag: "{{ my_tf_key }}"
+  
+    - name: Inventory Update
+      ansible.builtin.meta: refresh_inventory

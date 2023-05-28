@@ -1,0 +1,17 @@
+#
+# Terraform Destroy
+#
+- hosts: localhost
+  tasks:
+
+    - name: Terraform Destroy
+      community.general.terraform:
+        project_path: 'terraform/'
+        state: absent
+        force_init: yes
+        init_reconfigure: yes
+        backend_config:
+          region: "ap-northeast-1"
+          bucket: "keyamamo-demo"
+          key: "{{ my_tf_key }}"
+
