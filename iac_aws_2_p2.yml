@@ -32,9 +32,18 @@
       debug:
         var: random_password
 
+    # - name: Temp password Set
+    #   user:
+    #     name: "ec2-user"
+    #     password: "{{ random_password | password_hash('sha512') }}"
+    #     update_password: always
+
     - name: Temp password Set
       user:
-        name: "ec2-user"
+        name: "hatdemo"
+        state: present
+        createhome: yes
+        shell: /bin/bash
         password: "{{ random_password | password_hash('sha512') }}"
         update_password: always
 
@@ -55,8 +64,8 @@
         name: sshd
         state: restarted
 
+    # - name: Temp password Set expiration
+    #   shell: chage -d 0 ec2-user
     - name: Temp password Set expiration
-      shell: chage -d 0 ec2-user
-
-
+      shell: chage -d 0 hatdemo
           
