@@ -54,9 +54,9 @@
       set_fact:
         random_password: "{{ lookup('community.general.random_string', length=12, charset='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@') }}"
 
-    - name: Temp password Debug
-      debug:
-        var: random_password
+    # - name: Temp password Debug
+    #   debug:
+    #     var: random_password
 
     - name: Temp password Set
       user:
@@ -106,8 +106,8 @@
 - hosts: localhost
   gather_facts: false
 
-  vars:
-   slack_token : xoxb-5334377005971-5363801820688-hAkXf0JexQ8z1mklGU5lm9eh
+  # vars:
+  #  slack_token : xxx
 
   tasks:
     # - name: Retrieve EC2 instance information
@@ -129,11 +129,13 @@
         token: "{{ slack_token }}"
         channel: '#ansible-demo'
         msg: | 
-          >{{ item }} 
-          >{{ hostvars[item].random_password }}
+          >{{ itemi }} 
+          >{{ hostvars[itemi].random_password }}
       loop: "{{ groups['tag_myGroup_' + my_tf_key] }}"
+      loop_control:
+        loop_var: itemi
       vars:
-        item: "{{ inventory_hostname }}"
+        itemi: "{{ inventory_hostname }}"
 
     # - name: Print instance public IP addresses
     #   debug:

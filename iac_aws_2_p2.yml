@@ -27,10 +27,6 @@
       set_fact:
         random_password: "{{ lookup('community.general.random_string', length=12, charset='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@') }}"
 
-    - name: Temp password Debug
-      debug:
-        var: random_password
-
     - name: Temp password Set
       user:
         name: "hatdemo"
