@@ -56,3 +56,28 @@
     - name: Temp password Set expiration
       shell: chage -d 0 hatdemo
 
+#
+# Notification
+#
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Send message
+      slack:
+        token: "{{ slack_token }}"
+        channel: '#ansible-demo'
+        msg: |
+          Ansible Automation Platformより
+          以下のSandbox環境の準備が完了しました
+
+    - name: Send message
+      slack:
+        token: "{{ slack_token }}"
+        channel: '#ansible-demo'
+        msg: | 
+          >{{ item }} 
+          >{{ hostvars[item].random_password }}
+      loop: "{{ groups['tag_myGroup_' + my_tf_key] }}"
+      vars:
+        item: "{{ inventory_hostname }}"
