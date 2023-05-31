@@ -3,21 +3,25 @@
 #
 - hosts: localhost
   tasks:
-
     - name: Terraform Run
       community.general.terraform:
+      #https://docs.ansible.com/ansible/latest/collections/community/general/terraform_module.html
       #cloud.terraform.terraform:
+
         project_path: 'terraform/'
         state: present
         force_init: yes
         init_reconfigure: yes
+        variables_files: "./tf.tfvars"
         backend_config:
           region: "ap-northeast-1"
-          bucket: "keyamamo-demo"
+          bucket: "keyamamo-demo3"
           key: "{{ my_tf_key }}"
         variables: 
            TF_VAR_tag: "{{ my_tf_key }}"
-  
+           TF_VAR_expire: "{{ lookup('pipe', 'date --date \"1 days\" +%Y-%m-%d') }}"
+          #  TF_VAR_expire: "{{ lookup('pipe', 'date --date \"1 days\" +%Y-%m-%dT%H:%M:%S') }}"
+
     - name: Inventory Update
       ansible.builtin.meta: refresh_inventory
 
@@ -29,7 +33,6 @@
   become: yes
   gather_facts: no
   tasks:
-
     - name: Wait for SSH connection
       ansible.builtin.wait_for_connection:
 
@@ -54,12 +57,6 @@
     - name: Temp password Debug
       debug:
         var: random_password
-
-    # - name: Temp password Set
-    #   user:
-    #     name: "ec2-user"
-    #     password: "{{ random_password | password_hash('sha512') }}"
-    #     update_password: always
 
     - name: Temp password Set
       user:
@@ -87,9 +84,63 @@
         name: sshd
         state: restarted
 
-    # - name: Temp password Set expiration
-    #   shell: chage -d 0 ec2-user
     - name: Temp password Set expiration
       shell: chage -d 0 hatdemo
 
-          
+    # - name: Retrieve EC2 instance information
+    #   ec2_instance_info:
+    #     region: your_region
+    #     filters:
+    #       "tag:Name": your_instance_name
+    #     aws_access_key: your_aws_access_key
+    #     aws_secret_key: your_aws_secret_key
+    #   register: ec2_info
+
+    # - name: Temp password Create
+    #   set_fact:
+    #     ec2hosts: "tag_myGroup_{{ my_tf_key }}"
+
+#
+# Notification
+#
+- hosts: localhost
+  gather_facts: false
+
+  vars:
+   slack_token : xoxb-5334377005971-5363801820688-hAkXf0JexQ8z1mklGU5lm9eh
+
+  tasks:
+    # - name: Retrieve EC2 instance information
+    #   ec2_instance_info:
+    #     filters:
+    #       "tag:myGroup": "{{ my_tf_key }}"
+    #   register: ec2_info
+
+    - name: Send message
+      slack:
+        token: "{{ slack_token }}"
+        channel: '#ansible-demo'
+        msg: |
+          Ansible Automation Platformより
+          以下のSandbox環境の準備が完了しました
+
+    - name: Send message
+      slack:
+        token: "{{ slack_token }}"
+        channel: '#ansible-demo'
+        msg: | 
+          >{{ item }} 
+          >{{ hostvars[item].random_password }}
+      loop: "{{ groups['tag_myGroup_' + my_tf_key] }}"
+      vars:
+        item: "{{ inventory_hostname }}"
+
+    # - name: Print instance public IP addresses
+    #   debug:
+    #     var: ec2_info.instances | map(attribute='public_ip_address') | list
+
+    # - name: Send message
+    #   slack:
+    #     token: xoxb-5334377005971-5363801820688-hAkXf0JexQ8z1mklGU5lm9eh
+    #     channel: '#ansible-demo'
+    #     msg: "準備完了. {{ec2_info.instances | map(attribute='public_ip_address') | list}}"

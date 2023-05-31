@@ -1,0 +1,23 @@
+- name: Example playbook
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+    # - name: Get EC2 instances
+    #   amazon.aws.aws_ec2:
+    #     filters:
+    #       "tag:expire": "*"
+    #   register: ec2_facts
+    
+    - name: Retrieve EC2 instance information
+      ec2_instance_info:
+        filters:
+          "tag:expire": "*"
+      register: ec2_info
+
+    - name: Check expiration date
+      debug:
+        msg: "Instance {{ item.instance_id }} has expired!"
+      # when: ansible_date_time.epoch > (item.tags['expire'] | int)
+      when: ansible_date_time.epoch > (item.tags['expire'] | date('%Y-%m-%d', '%s'))
+      loop: "{{ ec2_info.instances }}"

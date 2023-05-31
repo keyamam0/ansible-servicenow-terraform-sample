@@ -1,61 +1,57 @@
-#variable "backend_key" {
-#  type    = string
-#  default = "terraform.tfstate"
-#}
-
 # Backend Set
 terraform {
   backend "s3" {
-    #bucket = "keyamamo-demo"
-    #key    = var.backend_key #tfstatファイルの名称
-    #region = "ap-northeast-1"
   }
+}
+
+# Variables
+variable "keypair_name"{
+}
+variable "TF_VAR_tag"{
+}
+variable "TF_VAR_expire"{
+}
+variable "subnet_id"{
+}
+variable "a_zone"{
 }
 
 # AWS Provider Config
-
-variable "key_name" {
-  default = "my-keypair-tmp"
-}
-
-variable "TF_VAR_tag" {
-  default = "sample_tag"
-}
-
 provider "aws" {
-  region = "ap-northeast-1"
-  # access_key = "xxxx"
-  # secret_key = "xxxx"
 }
 
-# AWS Resource Create
-resource "aws_instance" "tf-ec2-01" {
+# EC2 Create
+resource "aws_instance" "tf-ec2-A" {
   ami = "ami-01b32aa8589df6208"
   instance_type = "t2.micro"
-  key_name = var.key_name
-  availability_zone = "ap-northeast-1a"
-  #vpc_security_group_ids = ["<セキュリティグループID>"]
+  key_name = var.keypair_name
+  availability_zone = var.a_zone
+  subnet_id = var.subnet_id
+
   tags = {
-    Name = "HelloAnsible-01"
+    Name = "Type-A"
     myGroup = var.TF_VAR_tag
+    expire = var.TF_VAR_expire
   }
 }
 
-resource "aws_instance" "tf-ec2-02" {
+resource "aws_instance" "tf-ec2-B" {
   ami = "ami-01b32aa8589df6208"
   instance_type = "t2.micro"
-  key_name = var.key_name
-  availability_zone = "ap-northeast-1a"
-  #vpc_security_group_ids = ["<セキュリティグループID>"]
+  key_name = var.keypair_name
+  availability_zone = var.a_zone
+  subnet_id = var.subnet_id
+
   tags = {
-    Name = "HelloAnsible-02"
+    Name = "Type-B"
     myGroup = var.TF_VAR_tag
+    expire = var.TF_VAR_expire
   }
 }
 
-# EBSボリュームの作成
+# EBS Create
 resource "aws_ebs_volume" "tf-ebs-01" {
-  availability_zone = "ap-northeast-1a"
+  availability_zone = var.a_zone
   size              = 50
 }
 
@@ -63,5 +59,5 @@ resource "aws_ebs_volume" "tf-ebs-01" {
 resource "aws_volume_attachment" "example_attachment" {
   device_name = "/dev/sdf"
   volume_id   = aws_ebs_volume.tf-ebs-01.id
-  instance_id = aws_instance.tf-ec2-01.id
+  instance_id = aws_instance.tf-ec2-A.id
 }

@@ -6,7 +6,6 @@
   become: yes
   gather_facts: no
   tasks:
-
     - name: Wait for SSH connection
       ansible.builtin.wait_for_connection:
 
@@ -31,12 +30,6 @@
     - name: Temp password Debug
       debug:
         var: random_password
-
-    # - name: Temp password Set
-    #   user:
-    #     name: "ec2-user"
-    #     password: "{{ random_password | password_hash('sha512') }}"
-    #     update_password: always
 
     - name: Temp password Set
       user:
@@ -64,8 +57,6 @@
         name: sshd
         state: restarted
 
-    # - name: Temp password Set expiration
-    #   shell: chage -d 0 ec2-user
     - name: Temp password Set expiration
       shell: chage -d 0 hatdemo
-          
+

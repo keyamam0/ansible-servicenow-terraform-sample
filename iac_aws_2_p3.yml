@@ -1,0 +1,29 @@
+#
+# Notification
+#
+- hosts: localhost
+  gather_facts: false
+
+  vars:
+   slack_token : xoxb-5334377005971-5363801820688-hAkXf0JexQ8z1mklGU5lm9eh
+
+  tasks:
+    - name: Send message
+      slack:
+        token: "{{ slack_token }}"
+        channel: '#ansible-demo'
+        msg: |
+          Ansible Automation Platformより
+          以下のSandbox環境の準備が完了しました
+
+    - name: Send message
+      slack:
+        token: "{{ slack_token }}"
+        channel: '#ansible-demo'
+        msg: | 
+          >{{ item }} 
+          >{{ hostvars[item].random_password }}
+      loop: "{{ groups['tag_myGroup_' + my_tf_key] }}"
+      vars:
+        item: "{{ inventory_hostname }}"
+
