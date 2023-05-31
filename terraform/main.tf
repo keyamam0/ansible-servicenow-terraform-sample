@@ -18,6 +18,7 @@ variable "a_zone"{
 
 # AWS Provider Config
 provider "aws" {
+  region = "ap-northeast-1"
 }
 
 # EC2 Create
