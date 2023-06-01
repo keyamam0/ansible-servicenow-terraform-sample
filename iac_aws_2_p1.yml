@@ -20,7 +20,6 @@
         variables: 
            TF_VAR_tag: "{{ my_tf_key }}"
            TF_VAR_expire: "{{ lookup('pipe', 'date --date \"1 days\" +%Y-%m-%d') }}"
-          #  TF_VAR_expire: "{{ lookup('pipe', 'date --date \"1 days\" +%Y-%m-%dT%H:%M:%S') }}"
 
     - name: Inventory Update
       ansible.builtin.meta: refresh_inventory
