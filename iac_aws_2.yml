@@ -119,7 +119,8 @@
     - name: Send message
       slack:
         token: "{{ slack_token }}"
-        channel: '#ansible-demo'
+        # channel: '#ansible-demo'
+        channel: "{{ slack_channel }}"
         msg: |
           Ansible Automation Platformより
           以下のSandbox環境の準備が完了しました
@@ -127,7 +128,8 @@
     - name: Send message
       slack:
         token: "{{ slack_token }}"
-        channel: '#ansible-demo'
+        # channel: '#ansible-demo'
+        channel: "{{ slack_channel }}"
         msg: | 
           >{{ itemi }} 
           >{{ hostvars[itemi].random_password }}
