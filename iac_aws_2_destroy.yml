@@ -12,6 +12,6 @@
         init_reconfigure: yes
         backend_config:
           region: "ap-northeast-1"
-          bucket: "keyamamo-demo"
+          bucket: "keyamamo-demo3"
           key: "{{ my_tf_key }}"
 
