@@ -69,7 +69,7 @@
         channel: "{{ slack_channel }}"
         msg: |
           Ansible Automation Platformより
-          以下のSandbox環境の準備が完了しました
+          以下のSandbox環境の準備が完了しました( 管理番号 {{ my_tf_key }} )
 
     - name: Send message
       slack:
