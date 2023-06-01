@@ -1,5 +1,6 @@
 #
-# Notification
+# とりあえず使わない。p2に統合、p2で設定した仮パスを送らないといけないため。
+# Notification 
 #
 - hosts: localhost
   gather_facts: false
