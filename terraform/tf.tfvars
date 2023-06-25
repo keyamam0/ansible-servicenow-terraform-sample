@@ -1,5 +1,5 @@
 # (注)ここに設定すると、AnsibleからParameter渡しより優先される
 keypair_name = "my-keypair-tmp"
 #subnet_id = "subnet-03b8a3d6e10879cec"
-subnet_id = "subnet-078413cd09a8496c8"
+subnet_id = "subnet-039425d487d1e3cb9"
 a_zone = "ap-northeast-1a"
