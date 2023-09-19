@@ -42,7 +42,7 @@
         update: yes
 
     - name: Copy the assets folder to the desired location
-       ansible.builtin.copy::
+       ansible.builtin.copy:
         src: '/tmp/Loopple-Landings/loopple-ecommerce-gift-shop-landing-page/assets/'
         dest: '/var/www/html/assets/'
         remote_src: yes
