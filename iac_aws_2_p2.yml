@@ -22,7 +22,18 @@
         name: httpd.service
         enabled: yes
         state: started
+        
+    - name: Fetch custom front page from GitHub
+      get_url:
+        url: https://github.com/Loopple/Landings/blob/main/loopple-ecommerce-gift-shop-landing-page/index.html
+        dest: /var/www/html/index.html
+        mode: '0644'
 
+    - name: Restart httpd to apply changes
+      service:
+        name: httpd
+        state: restarted
+        
     - name: Temp password Create
       set_fact:
         random_password: "{{ lookup('community.general.random_string', length=12, charset='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@') }}"
