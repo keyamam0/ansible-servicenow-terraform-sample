@@ -25,7 +25,7 @@
         
     - name: Fetch custom front page from GitHub
       get_url:
-        url: https://github.com/Loopple/Landings/blob/main/loopple-ecommerce-gift-shop-landing-page/index.html
+        url: https://raw.githubusercontent.com/Loopple/Landings/main/loopple-ecommerce-gift-shop-landing-page/index.html
         dest: /var/www/html/index.html
         mode: '0644'
 
