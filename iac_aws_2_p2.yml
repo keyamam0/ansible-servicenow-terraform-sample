@@ -29,6 +29,29 @@
         dest: /var/www/html/index.html
         mode: '0644'
 
+    - name: Ensure git is installed
+      yum:
+        name: git
+        state: present
+
+    - name: Clone the GitHub repository to a temporary directory
+      git:
+        repo: 'https://github.com/Loopple/Landings.git'
+        dest: '/tmp/Loopple-Landings'
+        clone: yes
+        update: yes
+
+    - name: Copy the assets folder to the desired location
+      synchronize:
+        src: '/tmp/Loopple-Landings/loopple-ecommerce-gift-shop-landing-page/assets/'
+        dest: '/var/www/html/assets/'
+        recursive: yes
+
+    - name: Remove the temporary directory
+      file:
+        path: '/tmp/Loopple-Landings'
+        state: absent
+        
     - name: Restart httpd to apply changes
       service:
         name: httpd
