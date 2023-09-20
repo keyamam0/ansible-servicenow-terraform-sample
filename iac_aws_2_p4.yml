@@ -33,7 +33,7 @@
         statistic: Average
         comparison: "GreaterThanThreshold"
         threshold: 0
-        period: 300
+        period: 60
         evaluation_periods: 1
         alarm_actions:
           - "arn:aws:sns:ap-northeast-1:667830292567:demo-EC2-CloudWatch-Notification"
