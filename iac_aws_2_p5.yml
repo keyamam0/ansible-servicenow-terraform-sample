@@ -18,7 +18,7 @@
       sys_id: "{{ sys_id }}"
       data:
         short_description: demo-description2
-        state: 3 #Closed Complete
+        state: 1100 #Closed Complete
     register: result
 
   - name: Print ServiceNow Response
