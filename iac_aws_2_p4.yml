@@ -24,6 +24,7 @@
 
     - name: Create CloudWatch Alarm for EC2 instance
       amazon.aws.cloudwatch_metric_alarm:
+        region: "ap-northeast-1"
         state: present
         name: "{{ 'demo-EC2 Instance State Monitoring-' + item.instance_id }}"
         description: "This is a description for the alarm"
