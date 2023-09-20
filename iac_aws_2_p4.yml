@@ -6,7 +6,7 @@
   hosts: localhost
   gather_facts: False
   vars:
-    tag_name: myGroup
+    # tag_name: myGroup
     # tag_value: YourTagValue
 
   tasks:
@@ -14,10 +14,10 @@
       amazon.aws.ec2_instance_info:
         region: "ap-northeast-1"
         filters:
-          "tag:{{ tag_name }}": "{{ my_tf_key }}"
+          "tag:myGroup": "{{ my_tf_key }}"
           instance-state-name: running
       register: ec2_facts
-
+        
     - name: Print debug
       debug:
         var: ec2_facts   
