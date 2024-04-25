@@ -31,7 +31,7 @@ resource "aws_instance" "tf-ec2-A" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "Type-A-${var.TF_VAR_tag}"
+    Name = "Server-A-${var.TF_VAR_tag}"
     myGroup = var.TF_VAR_tag
     expire = var.TF_VAR_expire
   }
@@ -46,7 +46,7 @@ resource "aws_instance" "tf-ec2-B" {
   associate_public_ip_address = true 
 
   tags = {
-    Name = "Type-B-${var.TF_VAR_tag}"
+    Name = "Server-B-${var.TF_VAR_tag}"
     myGroup = var.TF_VAR_tag
     expire = var.TF_VAR_expire
   }
