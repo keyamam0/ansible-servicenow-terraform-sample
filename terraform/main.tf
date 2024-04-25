@@ -30,7 +30,7 @@ resource "aws_instance" "tf-ec2-A" {
   subnet_id = var.subnet_id
 
   tags = {
-    Name = "Type-A"
+    Name = "Type-A-${var.TF_VAR_tag}"
     myGroup = var.TF_VAR_tag
     expire = var.TF_VAR_expire
   }
@@ -44,7 +44,7 @@ resource "aws_instance" "tf-ec2-B" {
   subnet_id = var.subnet_id
 
   tags = {
-    Name = "Type-B"
+    Name = "Type-B-${var.TF_VAR_tag}"
     myGroup = var.TF_VAR_tag
     expire = var.TF_VAR_expire
   }
