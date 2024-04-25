@@ -28,6 +28,7 @@ resource "aws_instance" "tf-ec2-A" {
   key_name = var.keypair_name
   availability_zone = var.a_zone
   subnet_id = var.subnet_id
+  associate_public_ip_address = true
 
   tags = {
     Name = "Type-A-${var.TF_VAR_tag}"
@@ -42,6 +43,7 @@ resource "aws_instance" "tf-ec2-B" {
   key_name = var.keypair_name
   availability_zone = var.a_zone
   subnet_id = var.subnet_id
+  associate_public_ip_address = true 
 
   tags = {
     Name = "Type-B-${var.TF_VAR_tag}"
