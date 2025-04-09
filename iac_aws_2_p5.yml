@@ -1,7 +1,7 @@
 ---
 # Update the status of a ServiceNow Request Item to "Closed Complete"
 
-- name: Create ServiceNow Incident using servicenow.itsm module
+- name: Update the status of a ServiceNow Request Item
   hosts: localhost
   gather_facts: no
   vars:
